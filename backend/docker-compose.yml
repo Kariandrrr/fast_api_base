@@ -1,5 +1,18 @@
 services:
 
+  postgres:
+    image: postgres:17-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: rapishno_db
+      POSTGRES_USER: rapishno_user
+      POSTGRES_PASSWORD: your_secure_password
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
   redis:
     image: redis:latest
     container_name: redis
@@ -19,4 +32,5 @@ services:
       - "127.0.0.1:5050:80"
 
 volumes:
+  postgres-data:
   redis-data:
