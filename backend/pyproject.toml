@@ -12,6 +12,7 @@ dependencies = [
     "filetype>=1.2.0",
     "gunicorn>=25.3.0",
     "pillow>=12.2.0",
+    "psycopg2-binary>=2.9.12",
     "pydantic-settings>=2.14.0",
     "pydantic[email]>=2.13.3",
     "python-dotenv>=1.2.2",
