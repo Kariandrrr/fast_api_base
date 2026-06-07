@@ -11,7 +11,7 @@ from .mixins import UUIDPKMixin
 from ...enums import SlotNumber
 
 
-class TimeSlots(Base, UUIDPKMixin):
+class TimeSlot(Base, UUIDPKMixin):
     slot_number: Mapped[SlotNumber] = mapped_column(
         ENUM(SlotNumber, name="slot_number", create_type=True) ,default=SlotNumber.one, nullable=False
     )

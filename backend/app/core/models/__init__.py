@@ -4,9 +4,12 @@ __all__ = (
     "Base",
     "User",
     "Building",
-    #"Room",
+    "Room",
+    "TimeSlot",
+    "Semester",
 
 )
 from .helpers import db_helper, redis_helper, Base
 from .user import User
-from .building import Building
+from .building import Building, Room
+from .time import TimeSlot, Semester
