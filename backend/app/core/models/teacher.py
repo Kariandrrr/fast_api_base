@@ -41,6 +41,8 @@ class Teacher(Base, UUIDPKMixin):
 
 
 class TeacherAvailability(Base, UUIDPKMixin):
+    __tablename__ = "teacher_availability"
+
     teacher_id: Mapped[UUID] = mapped_column(ForeignKey("teachers.id"), nullable=False)
 
     day_of_week: Mapped[DayOfWeek] = mapped_column(
