@@ -16,8 +16,8 @@ from ...enums import Shift
 
 
 class Group(Base, UUIDPKMixin):
-    specialty_id: Mapped[UUID] = mapped_column(
-        ForeignKey("specialties.id", ondelete="RESTRICT"),
+    speciality_id: Mapped[UUID] = mapped_column(
+        ForeignKey("specialities.id", ondelete="RESTRICT"),
         nullable=False,
     )
     name: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
@@ -35,7 +35,7 @@ class Group(Base, UUIDPKMixin):
         ),
         CheckConstraint("year BETWEEN 1 AND 7", name="ck_group_year_range"),
         UniqueConstraint(
-            "specialty_id", "name", "year", name="uq_group_specialty_name_year"
+            "speciality_id", "name", "year", name="uq_group_speciality_name_year"
         ),
     )
     # TODO: rel
