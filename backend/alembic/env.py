@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from alembic import context
@@ -10,23 +11,22 @@ from app.core.models import Base
 config = context.config
 
 if config.config_file_name is not None:
-    fileConfig(
-        config.config_file_name
-        )
+    fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
 
-LOCAL_DB_URL = "postgresql+psycopg2://rapishno_user:your_secure_password@localhost:5432/rapishno_db"
-config.set_main_option(
-    "sqlalchemy.url",
-    LOCAL_DB_URL
-    )
+database_url = os.getenv("APP_CONFIG__DB__PG__URL")
+
+sync_db_url = database_url.replace("+asyncpg", "+psycopg2") if database_url else None
+
+if not sync_db_url:
+    raise ValueError("No database URL found")
+
+config.set_main_option("sqlalchemy.url", sync_db_url)
 
 
 def run_migrations_offline() -> None:
-    url = config.get_main_option(
-        "sqlalchemy.url"
-        )
+    url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -38,43 +38,31 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(
-        connection=connection,
-        target_metadata=target_metadata
-        )
+    context.configure(connection=connection, target_metadata=target_metadata)
     with context.begin_transaction():
         context.run_migrations()
 
 
 async def run_async_migrations() -> None:
     connectable = async_engine_from_config(
-        config.get_section(
-            config.config_ini_section,
-            {}
-            ),
+        config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
     async with connectable.connect() as connection:
-        await connection.run_sync(
-            do_run_migrations
-            )
+        await connection.run_sync(do_run_migrations)
     await connectable.dispose()
 
 
 def run_migrations_online_sync() -> None:
-    configuration = config.get_section(
-        config.config_ini_section
-        )
+    configuration = config.get_section(config.config_ini_section)
     connectable = engine_from_config(
         configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
     with connectable.connect() as connection:
-        do_run_migrations(
-            connection
-            )
+        do_run_migrations(connection)
 
 
 if context.is_offline_mode():
