@@ -12,6 +12,7 @@ __all__ = (
     "Specialty",
     "Group",
     "Practice",
+    "Subject",
 )
 from .helpers import db_helper, redis_helper, Base
 from .user import User
@@ -21,3 +22,4 @@ from .teacher import Teacher, TeacherAvailability
 from .specialty import Specialty
 from .group import Group
 from .practice import Practice
+from .subject import Subject
