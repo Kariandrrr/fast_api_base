@@ -1,0 +1,1 @@
+APP_CONFIG__DB__PG__URL="postgresql+asyncpg://postgres:Karishka08programmer@localhost:5432/RASPISHNO"
