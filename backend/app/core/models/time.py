@@ -1,7 +1,16 @@
 from datetime import time, date
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Integer, Time, CheckConstraint, Date, UniqueConstraint
+from sqlalchemy import (
+    Integer,
+    Time,
+    CheckConstraint,
+    Date,
+    UniqueConstraint,
+    Index,
+    String,
+    nulls_last,
+)
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -32,6 +41,8 @@ class TimeSlot(Base, UUIDPKMixin):
     __table_args__ = (
         CheckConstraint("end_time > start_time", name="check_time_order"),
         UniqueConstraint("slot_number", name="slot_number_unique"),
+        Index("idx_time_slot_number", "slot_number"),
+        Index("idx_time_slot_start_time", "start_time"),
     )
 
 
@@ -47,6 +58,8 @@ class Semester(Base, UUIDPKMixin):
 
     practice_start_date: Mapped[date] = mapped_column(Date, nullable=False)
     practice_end_date: Mapped[date] = mapped_column(Date, nullable=False)
+
+    description: Mapped[str] = mapped_column(String(150), nullable=True)
 
     # rel
     schedule_plans: Mapped[list["SchedulePlan"]] = relationship(
@@ -78,4 +91,7 @@ class Semester(Base, UUIDPKMixin):
         UniqueConstraint(
             "academic_year", "semester_number", name="unique_semester_year_number"
         ),
+        Index("idx_semester_academic_year", "academic_year"),
+        Index("idx_semester_number", "semester_number"),
+        Index("idx_semester_dates", "start_date", "end_date"),
     )
