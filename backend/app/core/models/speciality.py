@@ -33,4 +33,4 @@ class Speciality(Base, UUIDPKMixin):
         lazy="selectin",
     )
 
-    __table_args__ = UniqueConstraint("name", "code", name="uq_speciality_name_code")
+    __table_args__ = (UniqueConstraint("name", "code", name="uq_speciality_name_code"),)

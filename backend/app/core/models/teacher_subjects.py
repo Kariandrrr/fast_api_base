@@ -4,6 +4,7 @@ from sqlalchemy import (
     UUID,
     ForeignKey,
     UniqueConstraint,
+    Index,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -32,6 +33,12 @@ class TeacherSubject(Base, UUIDPKMixin):
         "Subject", back_populates="teacher_subjects", lazy="selectin"
     )
 
-    __table_args__ = UniqueConstraint(
-        "teacher_id", "subject_id", name="uniq_teacher_id_subject_id_and_teacher_id"
+    __table_args__ = (
+        UniqueConstraint(
+            "teacher_id",
+            "subject_id",
+            name="uniq_teacher_id_subject_id_and_teacher_id",
+        ),
+        Index("idx_teacher_subject_teacher", "teacher_id"),
+        Index("idx_teacher_subject_subject", "subject_id"),
     )

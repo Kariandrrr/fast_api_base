@@ -7,6 +7,7 @@ from sqlalchemy import (
     ForeignKey,
     CheckConstraint,
     Date,
+    Index,
 )
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -86,6 +87,12 @@ class SchedulePlan(Base, UUIDPKMixin):
             "semester_id",
             name="uq_schedule_plan_speciality_subject_semester",
         ),
+        Index("idx_schedule_plan_speciality", "speciality_id"),
+        Index("idx_schedule_plan_semester", "semester_id"),
+        Index("idx_schedule_plan_subject", "subject_id"),
+        Index("idx_schedule_plan_year", "year"),
+        # search plan fro speciality+semester
+        Index("idx_schedule_plan_speciality_semester", "speciality_id", "semester_id"),
     )
 
 
@@ -167,4 +174,16 @@ class ScheduleItem(Base, UUIDPKMixin, TimestampMixin):
         UniqueConstraint(
             "room_id", "class_date", "time_slot_id", name="uq_schedule_room_date_time"
         ),
+        # search by class date
+        Index("idx_schedule_item_class_date", "class_date"),
+        # search by prof+date (schedule for prof)
+        Index("idx_schedule_item_teacher_date", "teacher_id", "class_date"),
+        # search by group+date (schedule for group)
+        Index("idx_schedule_item_group_date", "group_id", "class_date"),
+        # search by class+date
+        Index("idx_schedule_item_room_date", "room_id", "class_date"),
+        # search by semester
+        Index("idx_schedule_item_semester", "semester_id"),
+        # search by activity
+        Index("idx_schedule_item_activity_type", "activity_type"),
     )

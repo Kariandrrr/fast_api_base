@@ -10,6 +10,7 @@ from sqlalchemy import (
     String,
     ForeignKey,
     Boolean,
+    Index,
 )
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -98,7 +99,7 @@ class TeacherAvailability(Base, UUIDPKMixin):
     teacher: Mapped["Teacher"] = relationship(
         "Teacher",
         back_populates="availabilities",
-        laxy="selectin",
+        lazy="selectin",
     )
 
     __table_args__ = (
@@ -108,6 +109,12 @@ class TeacherAvailability(Base, UUIDPKMixin):
         UniqueConstraint(
             "teacher_id", "day_of_week", "start_time", name="uq_teacher_day_time"
         ),
+        # search available teachers in certain day+time
+        Index(
+            "idx_teacher_availability_day_time", "day_of_week", "start_time", "end_time"
+        ),
+        # search all slots of prof
+        Index("idx_teacher_availability_teacher", "teacher_id"),
     )
 
 
@@ -156,4 +163,8 @@ class TeacherSubstitution(Base, UUIDPKMixin, TimestampMixin):
             "reason IS NULL OR length(trim(reason)) > 0",
             name="ck_teacher_substitution_reason_not_empty",
         ),
+        Index("idx_teacher_substitution_schedule_item", "schedule_item_id"),
+        Index("idx_teacher_substitution_old_teacher", "old_teacher_id"),
+        Index("idx_teacher_substitution_new_teacher", "new_teacher_id"),
+        Index("idx_teacher_substitution_created_at", "created_at"),
     )

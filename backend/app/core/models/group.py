@@ -7,6 +7,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     CheckConstraint,
+    Index,
 )
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -55,4 +56,8 @@ class Group(Base, UUIDPKMixin):
         UniqueConstraint(
             "speciality_id", "name", "year", name="uq_group_speciality_name_year"
         ),
+        Index("idx_group_speciality", "speciality_id"),
+        Index("idx_group_year", "year"),
+        # search groups by speciality+year
+        Index("idx_group_speciality_year", "speciality_id", "year"),
     )

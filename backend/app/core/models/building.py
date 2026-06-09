@@ -7,6 +7,7 @@ from sqlalchemy import (
     UUID,
     ForeignKey,
     CheckConstraint,
+    Index,
 )
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -27,6 +28,8 @@ class Building(Base, UUIDPKMixin):
     rooms: Mapped[list["Room"]] = relationship(
         "Room", back_populates="building", cascade="all,delete-orphan", lazy="selectin"
     )
+
+    __table_args__ = (Index("idx_building_name", "name"),)
 
 
 class Room(Base, UUIDPKMixin):
@@ -55,4 +58,7 @@ class Room(Base, UUIDPKMixin):
     __table_args__ = (
         UniqueConstraint("building_id", "room_number", name="unique_room_per_building"),
         CheckConstraint("capacity > 0", name="capacity_check"),
+        Index("idx_room_building", "building_id"),
+        Index("idx_room_type", "room_type"),
+        Index("idx_room_capacity", "capacity"),
     )

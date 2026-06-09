@@ -7,6 +7,7 @@ from sqlalchemy import (
     ForeignKey,
     Date,
     CheckConstraint,
+    Index,
 )
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -45,4 +46,7 @@ class Practice(Base, UUIDPKMixin):
             "practice_start_date < practice_end_date", name="ck_practice_date_order"
         ),
         CheckConstraint("hours > 0 AND hours <= 1000", name="ck_practice_hours_range"),
+        Index("idx_practice_semester", "semester_id"),
+        Index("idx_practice_type", "type"),
+        Index("idx_practice_dates", "practice_start_date", "practice_end_date"),
     )
