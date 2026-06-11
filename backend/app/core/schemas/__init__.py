@@ -14,6 +14,12 @@ __all__ = (
     "RoomResponse",
     "RoomListResponse",
     "RoomBrief",
+    "GroupBase",
+    "GroupResponse",
+    "GroupListResponse",
+    "GroupCreate",
+    "GroupUpdate",
+    "GroupBrief",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -32,4 +38,12 @@ from .building_and_room.room import (
     RoomResponse,
     RoomListResponse,
     RoomBrief,
+)
+from .group import (
+    GroupBase,
+    GroupResponse,
+    GroupListResponse,
+    GroupCreate,
+    GroupUpdate,
+    GroupBrief,
 )
