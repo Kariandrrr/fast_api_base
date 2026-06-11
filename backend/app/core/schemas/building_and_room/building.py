@@ -2,7 +2,7 @@ from uuid import UUID
 
 from pydantic import Field, BaseModel
 
-from . import BaseSchema
+from .. import BaseSchema
 
 
 class BuildingBase(BaseSchema):
