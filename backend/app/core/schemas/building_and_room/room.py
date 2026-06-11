@@ -3,6 +3,7 @@ from uuid import UUID
 from pydantic import Field, BaseModel
 
 from .. import BaseSchema
+from ..ListResponse import ListResponse
 from ....enums import RoomType
 
 
@@ -50,9 +51,5 @@ class RoomBrief(BaseSchema):
     building_id: UUID | None = Field(None, description="ID здания")
 
 
-class RoomListResponse(BaseModel):
+class RoomListResponse(ListResponse):
     items: list[RoomResponse]
-    total: int = Field(..., ge=0, description="Всего записей")
-    page: int = Field(..., ge=1, description="Текущая страница")
-    size: int = Field(..., ge=1, le=100, description="Записей на странице")
-    pages: int = Field(..., ge=0, description="Всего страниц")
