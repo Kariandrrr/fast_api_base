@@ -8,14 +8,28 @@ __all__ = (
     "BuildingCreate",
     "BuildingUpdate",
     "BuildingBrief",
+    "RoomCreate",
+    "RoomUpdate",
+    "RoomBase",
+    "RoomResponse",
+    "RoomListResponse",
+    "RoomBrief",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
 from .base import BaseSchema
-from .building import (
+from .building_and_room.building import (
     BuildingBase,
     BuildingResponse,
     BuildingCreate,
     BuildingUpdate,
     BuildingBrief,
+)
+from .building_and_room.room import (
+    RoomCreate,
+    RoomUpdate,
+    RoomBase,
+    RoomResponse,
+    RoomListResponse,
+    RoomBrief,
 )
