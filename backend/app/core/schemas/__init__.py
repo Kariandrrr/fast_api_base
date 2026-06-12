@@ -28,6 +28,13 @@ __all__ = (
     "TeacherCreate",
     "TeacherUpdateByTeacher",
     "TeacherUpdateByAdmin",
+    "SubjectResponse",
+    "SubjectDetailResponse",
+    "SubjectBase",
+    "SubjectListResponse",
+    "SubjectBrief",
+    "SubjectUpdate",
+    "SubjectCreate",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -64,4 +71,13 @@ from .teacher_and_subject.teacher import (
     TeacherCreate,
     TeacherUpdateByTeacher,
     TeacherUpdateByAdmin,
+)
+from .teacher_and_subject.subject import (
+    SubjectResponse,
+    SubjectDetailResponse,
+    SubjectBase,
+    SubjectListResponse,
+    SubjectBrief,
+    SubjectUpdate,
+    SubjectCreate,
 )
