@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 
 class Teacher(Base, UUIDPKMixin):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
-    middle_name: Mapped[str] = mapped_column(String(30), nullable=True)
+    middle_name: Mapped[str | None] = mapped_column(String(30), nullable=True)
     last_name: Mapped[str] = mapped_column(String(30), nullable=False)
 
     is_full_time: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
