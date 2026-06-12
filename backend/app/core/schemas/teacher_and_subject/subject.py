@@ -37,6 +37,7 @@ class SubjectDetailResponse(SubjectResponse):
 
 
 class SubjectBrief(BaseSchema):
+    id: UUID = Field(..., description="ID предмета")
     name: str = Field(..., description="Название предмета")
     code: str = Field(..., description="Код предмета")
 
