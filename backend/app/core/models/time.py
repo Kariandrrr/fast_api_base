@@ -9,7 +9,6 @@ from sqlalchemy import (
     UniqueConstraint,
     Index,
     String,
-    nulls_last,
 )
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -22,6 +21,7 @@ if TYPE_CHECKING:
     from . import ScheduleItem
     from . import SchedulePlan
     from . import Practice
+    from . import Group
 
 
 class TimeSlot(Base, UUIDPKMixin):
@@ -66,7 +66,12 @@ class Semester(Base, UUIDPKMixin):
     schedule_items: Mapped[list["ScheduleItem"]] = relationship(
         "ScheduleItem", back_populates="semester", lazy="selectin"
     )
-
+    groups: Mapped[list["Group"]] = relationship(
+        "Group",
+        foreign_keys="[Group.current_semester_id]",
+        back_populates="current_semester",
+        lazy="selectin",
+    )
     practices: Mapped[list["Practice"]] = relationship(
         "Practice",
         back_populates="semester",

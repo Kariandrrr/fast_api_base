@@ -19,12 +19,16 @@ from ...enums import Shift
 
 if TYPE_CHECKING:
     from . import ScheduleItem
+    from . import Semester
 
 
 class Group(Base, UUIDPKMixin):
     speciality_id: Mapped[UUID] = mapped_column(
         ForeignKey("specialities.id", ondelete="RESTRICT"),
         nullable=False,
+    )
+    current_semester_id: Mapped[UUID] = mapped_column(
+        ForeignKey("semesters.id", ondelete="RESTRICT"), nullable=False
     )
     name: Mapped[str] = mapped_column(String(10), nullable=False, unique=True)
     year: Mapped[int] = mapped_column(Integer, nullable=False)
@@ -45,6 +49,12 @@ class Group(Base, UUIDPKMixin):
         "ScheduleItem",
         back_populates="group",
         lazy="selectin",
+    )
+    current_semester: Mapped["Semester"] = relationship(
+        "Semester",
+        foreign_keys=[current_semester_id],
+        lazy="selectin",
+        back_populates="groups",
     )
 
     __table_args__ = (
