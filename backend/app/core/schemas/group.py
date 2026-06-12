@@ -16,7 +16,7 @@ class GroupBase(BaseSchema):
         description="Группа",
     )
     year: int = Field(..., ge=1, le=7, description="Год обучения")
-    shift: Shift = Field(..., description="Смена обучения (первя/вторая)")
+    shift: Shift = Field(..., description="Смена обучения (первая/вторая)")
     student_count: int = Field(
         ..., ge=1, le=40, description="Количество студентов в группе"
     )
@@ -24,7 +24,7 @@ class GroupBase(BaseSchema):
 
 class GroupCreate(GroupBase):
     speciality_id: UUID = Field(..., description="ID специальности")
-    shift: Shift = Field(..., description="Смена (обязательно при создании)")
+    current_semester_id: UUID = Field(..., description="ID текущего семестра")
 
 
 class GroupUpdate(BaseModel):
@@ -41,14 +41,16 @@ class GroupUpdate(BaseModel):
         None, ge=1, le=40, description="Количество студентов в группе"
     )
     speciality_id: UUID | None = Field(None, description="ID специальности")
+    current_semester_id: UUID | None = Field(None, description="ID текущего семестра")
 
 
 class GroupResponse(BaseSchema, GroupBase):
     id: UUID = Field(..., description="Уникальный идентификатор")
     speciality_id: UUID = Field(..., description="ID специальности")
+    current_semester_id: UUID = Field(..., description="ID текущего семестра")
 
 
-# TODO: create a GroupDetailResponse scheme
+# TODO: create a GroupDetailResponse scheme  (add semesters above)
 
 # class GroupDetailResponse(GroupResponse):
 #     speciality: SpecialityResponse
