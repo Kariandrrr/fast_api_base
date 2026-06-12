@@ -56,9 +56,6 @@ class Semester(Base, UUIDPKMixin):
     session_start_date: Mapped[date] = mapped_column(Date, nullable=False)
     session_end_date: Mapped[date] = mapped_column(Date, nullable=False)
 
-    practice_start_date: Mapped[date] = mapped_column(Date, nullable=False)
-    practice_end_date: Mapped[date] = mapped_column(Date, nullable=False)
-
     description: Mapped[str] = mapped_column(String(150), nullable=True)
 
     # rel
@@ -71,7 +68,10 @@ class Semester(Base, UUIDPKMixin):
     )
 
     practices: Mapped[list["Practice"]] = relationship(
-        "Practice", back_populates="semester", lazy="selectin"
+        "Practice",
+        back_populates="semester",
+        lazy="selectin",
+        cascade="all, delete-orphan",
     )
 
     __table_args__ = (
