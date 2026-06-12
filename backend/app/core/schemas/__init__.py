@@ -47,6 +47,13 @@ __all__ = (
     "TimeSlotUpdate",
     "TimeSlotCreate",
     "TimeSlotBrief",
+    "SemesterResponse",
+    "SemesterBrief",
+    "SemesterListResponse",
+    "SemesterBase",
+    "SemesterDetailResponse",
+    "SemesterUpdate",
+    "SemesterCreate",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -108,4 +115,13 @@ from .semester_and_slot_time.time_slot import (
     TimeSlotUpdate,
     TimeSlotCreate,
     TimeSlotBrief,
+)
+from .semester_and_slot_time.semester import (
+    SemesterResponse,
+    SemesterBrief,
+    SemesterListResponse,
+    SemesterBase,
+    SemesterDetailResponse,
+    SemesterUpdate,
+    SemesterCreate,
 )
