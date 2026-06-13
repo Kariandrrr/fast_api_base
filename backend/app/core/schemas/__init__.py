@@ -54,6 +54,12 @@ __all__ = (
     "SemesterDetailResponse",
     "SemesterUpdate",
     "SemesterCreate",
+    "SpecialityBase",
+    "SpecialityResponse",
+    "SpecialityDetailResponse",
+    "SpecialityBrief",
+    "SpecialityCreate",
+    "SpecialityUpdate",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -124,4 +130,12 @@ from .semester_and_slot_time.semester import (
     SemesterDetailResponse,
     SemesterUpdate,
     SemesterCreate,
+)
+from .speciality import (
+    SpecialityBase,
+    SpecialityResponse,
+    SpecialityDetailResponse,
+    SpecialityBrief,
+    SpecialityCreate,
+    SpecialityUpdate,
 )
