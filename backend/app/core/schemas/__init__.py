@@ -60,6 +60,13 @@ __all__ = (
     "SpecialityBrief",
     "SpecialityCreate",
     "SpecialityUpdate",
+    "PracticeBase",
+    "PracticeResponse",
+    "PracticeDetailResponse",
+    "PracticeType",
+    "PracticeListResponse",
+    "PracticeUpdate",
+    "PracticeCreate",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -138,4 +145,13 @@ from .speciality import (
     SpecialityBrief,
     SpecialityCreate,
     SpecialityUpdate,
+)
+from .schedule.practice import (
+    PracticeBase,
+    PracticeResponse,
+    PracticeDetailResponse,
+    PracticeType,
+    PracticeListResponse,
+    PracticeUpdate,
+    PracticeCreate,
 )
