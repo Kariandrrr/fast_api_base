@@ -67,6 +67,13 @@ __all__ = (
     "PracticeListResponse",
     "PracticeUpdate",
     "PracticeCreate",
+    "PracticeBrief",
+    "TeacherSubstitutionResponse",
+    "TeacherSubstitutionBase",
+    "TeacherSubstitutionCreate",
+    "TeacherSubstitutionUpdate",
+    "TeacherSubstitutionListResponse",
+    "TeacherSubstitutionDetailResponse",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -154,4 +161,13 @@ from .schedule.practice import (
     PracticeListResponse,
     PracticeUpdate,
     PracticeCreate,
+    PracticeBrief,
+)
+from .teacher_and_subject.teacher_substitution import (
+    TeacherSubstitutionResponse,
+    TeacherSubstitutionBase,
+    TeacherSubstitutionCreate,
+    TeacherSubstitutionUpdate,
+    TeacherSubstitutionListResponse,
+    TeacherSubstitutionDetailResponse,
 )
