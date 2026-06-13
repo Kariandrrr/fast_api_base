@@ -4,7 +4,7 @@ from uuid import UUID
 from pydantic import Field, BaseModel
 
 from .teacher import TeacherBrief
-from .. import BaseSchema
+from .. import BaseSchema, ScheduleItemBrief
 from ..ListResponse import ListResponse
 
 
