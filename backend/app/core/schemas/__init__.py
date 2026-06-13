@@ -79,6 +79,12 @@ __all__ = (
     "SchedulePlanListResponse",
     "SchedulePlanCreate",
     "SchedulePlanUpdate",
+    "ScheduleItemBase",
+    "ScheduleItemBrief",
+    "ScheduleItemResponse",
+    "ScheduleItemListResponse",
+    "ScheduleItemCreate",
+    "ScheduleItemUpdate",
 )
 
 from .user import UserRead, UserCreate, UserUpdate
@@ -182,4 +188,12 @@ from .schedule.schedule_plan import (
     SchedulePlanListResponse,
     SchedulePlanCreate,
     SchedulePlanUpdate,
+)
+from .schedule.schedule_item import (
+    ScheduleItemBase,
+    ScheduleItemBrief,
+    ScheduleItemResponse,
+    ScheduleItemListResponse,
+    ScheduleItemCreate,
+    ScheduleItemUpdate,
 )
