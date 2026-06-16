@@ -94,6 +94,32 @@ class TestBearerLogout:
         )
         assert r.status_code == 401
 
+    async def test_access_token_rejected_after_logout(self, client: AsyncClient, bearer_tokens: dict):
+        headers = {"Authorization": f"Bearer {bearer_tokens['access_token']}"}
+        await client.post(
+            "/api/auth/bearer/logout",
+            json={"refresh_token": bearer_tokens["refresh_token"]},
+            headers=headers,
+        )
+        r = await client.get("/api/users/me", headers=headers)
+        assert r.status_code == 401
+
+    async def test_refresh_token_rejected_after_logout(self, client: AsyncClient, bearer_tokens: dict):
+        headers = {"Authorization": f"Bearer {bearer_tokens['access_token']}"}
+        await client.post(
+            "/api/auth/bearer/logout",
+            json={"refresh_token": bearer_tokens["refresh_token"]},
+            headers=headers,
+        )
+        r = await client.post(
+            "/api/auth/bearer/refresh",
+            json={
+                "access_token": bearer_tokens["access_token"],
+                "refresh_token": bearer_tokens["refresh_token"],
+            },
+        )
+        assert r.status_code == 401
+
 
 class TestBearerLogoutAll:
     async def test_success(self, client: AsyncClient, bearer_tokens: dict):
@@ -103,6 +129,31 @@ class TestBearerLogoutAll:
 
     async def test_unauthenticated(self, client: AsyncClient):
         r = await client.post("/api/auth/bearer/logout-all")
+        assert r.status_code == 401
+
+    async def test_access_token_rejected_after_logout_all(self, client: AsyncClient, bearer_tokens: dict):
+        headers = {"Authorization": f"Bearer {bearer_tokens['access_token']}"}
+        await client.post("/api/auth/bearer/logout-all", headers=headers)
+        r = await client.get("/api/users/me", headers=headers)
+        assert r.status_code == 401
+
+    async def test_second_session_rejected_after_logout_all(self, client: AsyncClient, registered_user: dict):
+        r1 = await client.post(
+            "/api/auth/bearer/login",
+            data={"username": DEFAULT_EMAIL, "password": DEFAULT_PASSWORD},
+        )
+        tokens1 = r1.json()
+        r2 = await client.post(
+            "/api/auth/bearer/login",
+            data={"username": DEFAULT_EMAIL, "password": DEFAULT_PASSWORD},
+        )
+        tokens2 = r2.json()
+
+        headers1 = {"Authorization": f"Bearer {tokens1['access_token']}"}
+        await client.post("/api/auth/bearer/logout-all", headers=headers1)
+
+        headers2 = {"Authorization": f"Bearer {tokens2['access_token']}"}
+        r = await client.get("/api/users/me", headers=headers2)
         assert r.status_code == 401
 
 

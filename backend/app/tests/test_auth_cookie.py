@@ -73,6 +73,16 @@ class TestCookieLogout:
         r = await client.post("/api/auth/cookie/logout")
         assert r.status_code == 401
 
+    async def test_access_rejected_after_logout(self, auth_client: AsyncClient):
+        await auth_client.post("/api/auth/cookie/logout")
+        r = await auth_client.get("/api/users/me")
+        assert r.status_code == 401
+
+    async def test_refresh_rejected_after_logout(self, auth_client: AsyncClient):
+        await auth_client.post("/api/auth/cookie/logout")
+        r = await auth_client.post("/api/auth/cookie/refresh")
+        assert r.status_code == 401
+
 
 class TestCookieLogoutAll:
     async def test_success(self, auth_client: AsyncClient):
@@ -82,6 +92,32 @@ class TestCookieLogoutAll:
     async def test_unauthenticated(self, client: AsyncClient):
         r = await client.post("/api/auth/cookie/logout-all")
         assert r.status_code == 401
+
+    async def test_access_rejected_after_logout_all(self, auth_client: AsyncClient):
+        await auth_client.post("/api/auth/cookie/logout-all")
+        r = await auth_client.get("/api/users/me")
+        assert r.status_code == 401
+
+    async def test_second_session_rejected_after_logout_all(self, client: AsyncClient, registered_user: dict):
+        from httpx import AsyncClient as _Client, ASGITransport
+        from app.app import main_app
+
+        await client.post(
+            "/api/auth/cookie/login",
+            data={"username": DEFAULT_EMAIL, "password": DEFAULT_PASSWORD},
+        )
+        async with _Client(transport=ASGITransport(app=main_app), base_url="http://test") as client2:
+            await client2.post(
+                "/api/auth/cookie/login",
+                data={"username": DEFAULT_EMAIL, "password": DEFAULT_PASSWORD},
+            )
+            r_before = await client2.get("/api/users/me")
+            assert r_before.status_code == 200
+
+            await client.post("/api/auth/cookie/logout-all")
+
+            r_after = await client2.get("/api/users/me")
+            assert r_after.status_code == 401
 
 
 class TestCookieRefresh:
