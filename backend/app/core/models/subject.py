@@ -6,7 +6,13 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .helpers import Base
-from .mixins import UUIDPKMixin
+from .mixins import (
+    UUIDPKMixin,
+    CreatedByMixin,
+    TimestampMixin,
+    UpdateAtMixin,
+    UpdatedByMixin,
+)
 
 if TYPE_CHECKING:
     from . import TeacherSubject
@@ -15,7 +21,9 @@ if TYPE_CHECKING:
     from . import Teacher
 
 
-class Subject(Base, UUIDPKMixin):
+class Subject(
+    Base, UUIDPKMixin, TimestampMixin, CreatedByMixin, UpdateAtMixin, UpdatedByMixin
+):
     name: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
     code: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
 
