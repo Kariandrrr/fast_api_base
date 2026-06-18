@@ -14,7 +14,13 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import Speciality
 from .helpers import Base
-from .mixins import UUIDPKMixin
+from .mixins import (
+    UUIDPKMixin,
+    CreatedByMixin,
+    TimestampMixin,
+    UpdateAtMixin,
+    UpdatedByMixin,
+)
 from ...enums import Shift
 
 if TYPE_CHECKING:
@@ -22,7 +28,9 @@ if TYPE_CHECKING:
     from . import Semester
 
 
-class Group(Base, UUIDPKMixin):
+class Group(
+    Base, UUIDPKMixin, TimestampMixin, CreatedByMixin, UpdateAtMixin, UpdatedByMixin
+):
     speciality_id: Mapped[UUID] = mapped_column(
         ForeignKey("specialities.id", ondelete="RESTRICT"),
         nullable=False,
