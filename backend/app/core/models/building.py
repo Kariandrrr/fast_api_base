@@ -13,14 +13,22 @@ from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .helpers import Base
-from .mixins import UUIDPKMixin
+from .mixins import (
+    UUIDPKMixin,
+    CreatedByMixin,
+    TimestampMixin,
+    UpdateAtMixin,
+    UpdatedByMixin,
+)
 from ...enums import RoomType
 
 if TYPE_CHECKING:
     from . import ScheduleItem
 
 
-class Building(Base, UUIDPKMixin):
+class Building(
+    Base, UUIDPKMixin, TimestampMixin, CreatedByMixin, UpdateAtMixin, UpdatedByMixin
+):
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     address: Mapped[str] = mapped_column(String(150), nullable=False)
 
@@ -32,7 +40,9 @@ class Building(Base, UUIDPKMixin):
     __table_args__ = (Index("idx_building_name", "name"),)
 
 
-class Room(Base, UUIDPKMixin):
+class Room(
+    Base, UUIDPKMixin, TimestampMixin, CreatedByMixin, UpdateAtMixin, UpdatedByMixin
+):
     room_number: Mapped[str] = mapped_column(String(10), nullable=False)
     capacity: Mapped[int] = mapped_column(Integer, nullable=False)
     room_type: Mapped[RoomType] = mapped_column(
