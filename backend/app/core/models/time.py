@@ -14,7 +14,13 @@ from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .helpers import Base
-from .mixins import UUIDPKMixin
+from .mixins import (
+    UUIDPKMixin,
+    CreatedByMixin,
+    TimestampMixin,
+    UpdateAtMixin,
+    UpdatedByMixin,
+)
 from ...enums import SlotNumber
 
 if TYPE_CHECKING:
@@ -24,7 +30,9 @@ if TYPE_CHECKING:
     from . import Group
 
 
-class TimeSlot(Base, UUIDPKMixin):
+class TimeSlot(
+    Base, UUIDPKMixin, TimestampMixin, CreatedByMixin, UpdateAtMixin, UpdatedByMixin
+):
     slot_number: Mapped[SlotNumber] = mapped_column(
         ENUM(SlotNumber, name="slot_number", create_type=True),
         default=SlotNumber.one,
@@ -46,7 +54,9 @@ class TimeSlot(Base, UUIDPKMixin):
     )
 
 
-class Semester(Base, UUIDPKMixin):
+class Semester(
+    Base, UUIDPKMixin, TimestampMixin, CreatedByMixin, UpdateAtMixin, UpdatedByMixin
+):
     academic_year: Mapped[int] = mapped_column(Integer, nullable=False)
     semester_number: Mapped[int] = mapped_column(Integer, nullable=False)
 
