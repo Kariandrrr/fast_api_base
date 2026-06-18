@@ -13,14 +13,22 @@ from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .helpers import Base
-from .mixins import UUIDPKMixin
+from .mixins import (
+    UUIDPKMixin,
+    CreatedByMixin,
+    TimestampMixin,
+    UpdateAtMixin,
+    UpdatedByMixin,
+)
 from ...enums import PracticeType
 
 if TYPE_CHECKING:
     from . import Semester
 
 
-class Practice(Base, UUIDPKMixin):
+class Practice(
+    Base, UUIDPKMixin, TimestampMixin, CreatedByMixin, UpdateAtMixin, UpdatedByMixin
+):
     semester_id: Mapped[UUID] = mapped_column(
         ForeignKey("semesters.id", ondelete="RESTRICT"), nullable=False
     )
