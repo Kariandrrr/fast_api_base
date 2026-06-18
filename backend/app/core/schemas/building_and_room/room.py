@@ -3,6 +3,7 @@ from uuid import UUID
 from pydantic import Field, BaseModel
 
 from .. import BaseSchema
+from ..AuditResponse import AuditResponse
 from ..ListResponse import ListResponse
 from ....enums import RoomType
 
@@ -38,7 +39,7 @@ class RoomUpdate(BaseModel):
     building_id: UUID | None = Field(None, description="ID здания")
 
 
-class RoomResponse(BaseSchema, RoomBase):
+class RoomResponse(BaseSchema, RoomBase, AuditResponse):
     id: UUID = Field(..., description="Уникальный идентификатор")
     building_id: UUID = Field(..., description="ID здания")
 

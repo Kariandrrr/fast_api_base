@@ -3,6 +3,7 @@ from uuid import UUID
 from pydantic import Field, BaseModel
 
 from .. import BaseSchema
+from ..AuditResponse import AuditResponse
 
 
 class BuildingBase(BaseSchema):
@@ -33,7 +34,7 @@ class BuildingUpdate(BaseModel):
     )
 
 
-class BuildingResponse(BaseSchema, BuildingBase):
+class BuildingResponse(BaseSchema, BuildingBase, AuditResponse):
     id: UUID = Field(..., description="Уникальный идентификатор")
 
 
