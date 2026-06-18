@@ -3,12 +3,15 @@ from uuid import UUID
 from pydantic import Field, BaseModel
 
 from . import BaseSchema
+from .AuditResponse import AuditResponse
 from .ListResponse import ListResponse
 from .teacher_and_subject.teacher import TeacherBrief
 
 
 class SpecialityBase(BaseSchema):
-    name: str = Field(..., min_length=1, max_length=70, description="Название специальности")
+    name: str = Field(
+        ..., min_length=1, max_length=70, description="Название специальности"
+    )
     code: str = Field(..., min_length=1, max_length=20, description="Код специальности")
 
 
@@ -25,7 +28,7 @@ class SpecialityUpdate(BaseModel):
     )
 
 
-class SpecialityResponse(BaseSchema, SpecialityBase):
+class SpecialityResponse(BaseSchema, SpecialityBase, AuditResponse):
     id: UUID = Field(..., description="Уникальный идентификатор")
 
 
