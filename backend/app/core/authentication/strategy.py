@@ -60,6 +60,12 @@ class AppJWTStrategy(JWTStrategy):
                 log.warning("read_token: версия токена устарела user_id=%s", user_id)
                 return None
 
+        session_id = data.get("session_id")
+        if session_id:
+            if not await self.redis.exists(f"session:{user_id}:{session_id}"):
+                log.warning("read_token: сессия не найдена session_id=%s", session_id)
+                return None
+
         try:
             parsed_id = user_manager.parse_id(user_id)
             return await user_manager.get(parsed_id)
@@ -80,6 +86,25 @@ class AppJWTStrategy(JWTStrategy):
             lifetime_seconds=self.lifetime_seconds,
             algorithm=self.algorithm,
         )
+
+    async def write_token_with_session(
+        self, user: User, session_id: str
+    ) -> tuple[str, str]:
+        jti = str(uuid4())
+        data = {
+            "sub": str(user.id),
+            "aud": self.token_audience,
+            "jti": jti,
+            "token_version": user.token_version,
+            "session_id": session_id,
+        }
+        token = generate_jwt(
+            data=data,
+            secret=self.encode_key,
+            lifetime_seconds=self.lifetime_seconds,
+            algorithm=self.algorithm,
+        )
+        return token, jti
 
     async def destroy_token(self, token: str | None) -> None:
         if not token:

@@ -56,6 +56,12 @@ class RefreshTokenService:
                 log.warning("read_token: версия токена устарела user_id=%s", user_id)
                 return None
 
+        session_id = data.get("session_id")
+        if session_id:
+            if not await self.redis.exists(f"session:{user_id}:{session_id}"):
+                log.warning("read_token: сессия не найдена session_id=%s", session_id)
+                return None
+
         return data
 
     async def write_token(self, user: User) -> str:
@@ -71,6 +77,25 @@ class RefreshTokenService:
             lifetime_seconds=self._lifetime,
             algorithm=self._algorithm,
         )
+
+    async def write_token_with_session(
+        self, user: User, session_id: str
+    ) -> tuple[str, str]:
+        jti = str(uuid4())
+        data = {
+            "sub": str(user.id),
+            "aud": self._audience,
+            "jti": jti,
+            "token_version": user.token_version,
+            "session_id": session_id,
+        }
+        token = generate_jwt(
+            data=data,
+            secret=self._secret,
+            lifetime_seconds=self._lifetime,
+            algorithm=self._algorithm,
+        )
+        return token, jti
 
     async def destroy_token(self, token: str) -> None:
         try:
