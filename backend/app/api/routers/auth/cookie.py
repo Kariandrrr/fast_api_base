@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from fastapi.routing import APIRoute
 
 from app.api.dependencies.authentication.fastapi_users import fastapi_users

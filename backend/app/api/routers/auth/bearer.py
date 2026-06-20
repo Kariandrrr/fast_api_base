@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from fastapi.routing import APIRoute
-from fastapi.security import HTTPBearer
 
 from app.api.dependencies.authentication.fastapi_users import fastapi_users
 from app.api.routers.auth.logout import (

@@ -1,5 +1,7 @@
-from redis.asyncio import Redis, ConnectionPool
 from typing import AsyncGenerator
+
+from redis.asyncio import Redis, ConnectionPool
+
 from app.core.config import settings
 
 

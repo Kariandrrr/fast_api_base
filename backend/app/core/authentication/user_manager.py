@@ -3,6 +3,7 @@ import logging
 import re
 import uuid
 from typing import Optional, TYPE_CHECKING
+
 from fastapi_users import BaseUserManager, UUIDIDMixin, InvalidPasswordException
 from fastapi_users.db import SQLAlchemyUserDatabase
 from starlette.responses import JSONResponse

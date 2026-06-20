@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.models import User
+from ...core.models import User
 
 
 async def deactivate_user(session: AsyncSession, user: User) -> None:

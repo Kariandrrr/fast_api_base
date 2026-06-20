@@ -1,14 +1,13 @@
-import time
 import logging
-from typing import TYPE_CHECKING
+import time
 from typing import Annotated
 from uuid import uuid4
 
 import jwt
 from fastapi import Depends
+from fastapi_users import exceptions, models
 from fastapi_users.authentication import JWTStrategy
 from fastapi_users.jwt import decode_jwt, generate_jwt
-from fastapi_users import exceptions, models
 from fastapi_users.manager import BaseUserManager
 from redis.asyncio import Redis
 

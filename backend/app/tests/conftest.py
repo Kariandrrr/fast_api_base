@@ -8,8 +8,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.pool import NullPool
 
 from app.app import main_app
-from app.core.models import Base, db_helper, redis_helper
 from app.core.config.main_config import Settings
+from app.core.models import Base, db_helper, redis_helper
 
 DEFAULT_EMAIL = "owner@test.com"
 DEFAULT_PASSWORD = "Test1234!"
