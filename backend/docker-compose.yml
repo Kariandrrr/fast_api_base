@@ -8,6 +8,19 @@ services:
     volumes:
       - redis-data:/data
 
+  pg:
+    image: postgres
+    container_name: postgresql
+    environment:
+      POSTGRES_DB: raspishno
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -20,3 +33,4 @@ services:
 
 volumes:
   redis-data:
+  pgdata:

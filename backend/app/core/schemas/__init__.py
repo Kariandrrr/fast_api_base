@@ -2,6 +2,7 @@ __all__ = (
     "UserRead",
     "UserCreate",
     "UserUpdate",
+    "SessionRead",
     "BaseSchema",
     "BuildingBase",
     "BuildingResponse",
@@ -89,6 +90,7 @@ __all__ = (
 
 from .user import UserRead, UserCreate, UserUpdate
 from .base import BaseSchema
+from .session import SessionRead
 from .building_and_room.building import (
     BuildingBase,
     BuildingResponse,

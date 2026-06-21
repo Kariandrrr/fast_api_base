@@ -15,18 +15,18 @@ class AuthJWTConfig(BaseModel):
     algorithm: str = "RS256"
     # access
     access_token_lifetime_seconds: int = EXPIRE_SECONDS
-    access_token_audience: str = "worktrack:access"
+    access_token_audience: str = "raspishno:access"
     # refresh
     refresh_token_lifetime_seconds: int = 60 * 60 * 24 * 30
-    refresh_token_audience: str = "worktrack:refresh"
+    refresh_token_audience: str = "raspishno:refresh"
     # Сброс пароля
     reset_password_token_secret: str
     reset_password_token_lifetime_seconds: int = 3600
-    reset_password_token_audience: str = "worktrack:reset"
+    reset_password_token_audience: str = "raspishno:reset"
     # Подтверждение email
     verification_token_secret: str
     verification_token_lifetime_seconds: int = 3600
-    verification_token_audience: str = "worktrack:verify"
+    verification_token_audience: str = "raspishno:verify"
 
 
 class AuthCookieConfig(BaseModel):

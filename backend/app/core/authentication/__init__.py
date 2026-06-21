@@ -4,8 +4,10 @@ __all__ = (
     "UserManager",
     "RefreshTokenService",
     "get_refresh_token_service",
+    "SessionService",
+    "get_session_service",
 )
 
 from .backend import auth_bearer_backend, auth_cookie_backend
 from .refresh_token import RefreshTokenService, get_refresh_token_service
-from .user_manager import UserManager
+from .session import SessionService, get_session_service

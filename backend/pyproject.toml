@@ -1,7 +1,7 @@
 [project]
-name = "work-track"
+name = "raspishno"
 version = "0.1.0"
-description = "Внутренний корпоративный портал для управления задачами и проектами"
+description = "Платформа для составления расписания"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -19,6 +19,7 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "redis>=7.4.0",
     "sqlalchemy[asyncio]>=2.0.49",
+    "user-agents>=2.2.0",
     "uvicorn[standard]>=0.45.0",
 ]
 

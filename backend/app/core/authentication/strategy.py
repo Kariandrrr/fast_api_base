@@ -17,7 +17,7 @@ from app.core.models import redis_helper, User
 log = logging.getLogger(__name__)
 
 
-class WorkTrackJWTStrategy(JWTStrategy):
+class AppJWTStrategy(JWTStrategy):
     def __init__(self, redis: Redis, **kwargs):
         super().__init__(**kwargs)
         self.redis = redis
@@ -59,6 +59,12 @@ class WorkTrackJWTStrategy(JWTStrategy):
                 log.warning("read_token: версия токена устарела user_id=%s", user_id)
                 return None
 
+        session_id = data.get("session_id")
+        if session_id:
+            if not await self.redis.exists(f"session:{user_id}:{session_id}"):
+                log.warning("read_token: сессия не найдена session_id=%s", session_id)
+                return None
+
         try:
             parsed_id = user_manager.parse_id(user_id)
             return await user_manager.get(parsed_id)
@@ -80,6 +86,25 @@ class WorkTrackJWTStrategy(JWTStrategy):
             algorithm=self.algorithm,
         )
 
+    async def write_token_with_session(
+        self, user: User, session_id: str
+    ) -> tuple[str, str]:
+        jti = str(uuid4())
+        data = {
+            "sub": str(user.id),
+            "aud": self.token_audience,
+            "jti": jti,
+            "token_version": user.token_version,
+            "session_id": session_id,
+        }
+        token = generate_jwt(
+            data=data,
+            secret=self.encode_key,
+            lifetime_seconds=self.lifetime_seconds,
+            algorithm=self.algorithm,
+        )
+        return token, jti
+
     async def destroy_token(self, token: str | None) -> None:
         if not token:
             return
@@ -95,7 +120,7 @@ class WorkTrackJWTStrategy(JWTStrategy):
             if jti and exp:
                 ttl = int(exp) - int(time.time())
                 if ttl > 0:
-                    await self.redis.setex(f"blacklist:access:{jti}", ttl, "1")
+                    await self.redis.set(f"blacklist:access:{jti}", "1", ex=ttl)
         except jwt.PyJWTError as e:
             log.warning("destroy_token: не удалось декодировать токен: %s", e)
 
@@ -106,8 +131,8 @@ class WorkTrackJWTStrategy(JWTStrategy):
 
 async def get_jwt_strategy(
     redis: Annotated[Redis, Depends(redis_helper.client_getter)],
-) -> WorkTrackJWTStrategy:
-    return WorkTrackJWTStrategy(
+) -> AppJWTStrategy:
+    return AppJWTStrategy(
         redis=redis,
         secret=settings.auth.jwt.private_key_path.read_text(),
         lifetime_seconds=settings.auth.jwt.access_token_lifetime_seconds,

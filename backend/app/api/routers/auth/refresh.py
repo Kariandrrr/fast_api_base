@@ -7,9 +7,11 @@ from app.api.dependencies.authentication.user_manager import get_user_manager
 from app.core.authentication import (
     RefreshTokenService,
     get_refresh_token_service,
+    SessionService,
+    get_session_service,
     UserManager,
 )
-from app.core.authentication.strategy import WorkTrackJWTStrategy, get_jwt_strategy
+from app.core.authentication.strategy import AppJWTStrategy, get_jwt_strategy
 from app.core.config import settings
 
 
@@ -22,8 +24,9 @@ async def _get_user_and_rotate(
     old_access_token: str,
     old_refresh_token: str,
     refresh_service: RefreshTokenService,
-    strategy: WorkTrackJWTStrategy,
+    strategy: AppJWTStrategy,
     user_manager: UserManager,
+    session_service: SessionService,
 ) -> tuple[str, str]:
     payload = await refresh_service.read_token(old_refresh_token)
     if payload is None:
@@ -39,8 +42,24 @@ async def _get_user_and_rotate(
     if not user.is_active:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "User is inactive")
 
-    new_refresh = await refresh_service.rotate(old_refresh_token, user)
-    new_access = await strategy.rotate(old_access_token, user)
+    session_id = payload.get("session_id")
+
+    await strategy.destroy_token(old_access_token)
+    await refresh_service.destroy_token(old_refresh_token)
+
+    if session_id:
+        new_access, access_jti = await strategy.write_token_with_session(
+            user, session_id
+        )
+        new_refresh, refresh_jti = await refresh_service.write_token_with_session(
+            user, session_id
+        )
+        await session_service.update_jtis(
+            str(user.id), session_id, access_jti, refresh_jti
+        )
+    else:
+        new_access = await strategy.write_token(user)
+        new_refresh = await refresh_service.write_token(user)
 
     await refresh_service.redis.set(f"user_version:{user.id}", user.token_version)
 
@@ -57,8 +76,9 @@ def make_cookie_refresh_router() -> APIRouter:
         refresh_service: Annotated[
             RefreshTokenService, Depends(get_refresh_token_service)
         ],
-        strategy: Annotated[WorkTrackJWTStrategy, Depends(get_jwt_strategy)],
+        strategy: Annotated[AppJWTStrategy, Depends(get_jwt_strategy)],
         user_manager: Annotated[UserManager, Depends(get_user_manager)],
+        session_service: Annotated[SessionService, Depends(get_session_service)],
     ):
         old_access_token = request.cookies.get(settings.auth.cookie.access_name)
         old_refresh_token = request.cookies.get(settings.auth.cookie.refresh_name)
@@ -69,6 +89,7 @@ def make_cookie_refresh_router() -> APIRouter:
             refresh_service=refresh_service,
             strategy=strategy,
             user_manager=user_manager,
+            session_service=session_service,
         )
 
         response.set_cookie(
@@ -104,8 +125,9 @@ def make_bearer_refresh_router() -> APIRouter:
         refresh_service: Annotated[
             RefreshTokenService, Depends(get_refresh_token_service)
         ],
-        strategy: Annotated[WorkTrackJWTStrategy, Depends(get_jwt_strategy)],
+        strategy: Annotated[AppJWTStrategy, Depends(get_jwt_strategy)],
         user_manager: Annotated[UserManager, Depends(get_user_manager)],
+        session_service: Annotated[SessionService, Depends(get_session_service)],
     ):
         new_access, new_refresh = await _get_user_and_rotate(
             old_access_token=body.access_token,
@@ -113,6 +135,7 @@ def make_bearer_refresh_router() -> APIRouter:
             refresh_service=refresh_service,
             strategy=strategy,
             user_manager=user_manager,
+            session_service=session_service,
         )
 
         return {
