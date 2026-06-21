@@ -1,13 +1,15 @@
 import os
 import ssl
+from typing import AsyncGenerator
 from typing import Optional
+
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
     AsyncEngine,
     async_sessionmaker,
     AsyncSession,
 )
-from typing import AsyncGenerator
+
 from app.core.config.main_config import settings
 
 

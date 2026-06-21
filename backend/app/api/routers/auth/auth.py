@@ -1,7 +1,8 @@
 from fastapi import APIRouter
+
 from app.core.config.main_config import settings
-from .cookie import cookie_router
 from .bearer import bearer_router
+from .cookie import cookie_router
 
 auth_router = APIRouter(
     prefix=settings.api.prefix.auth,

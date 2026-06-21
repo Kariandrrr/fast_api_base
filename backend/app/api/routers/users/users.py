@@ -2,12 +2,12 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.api.crud.users import deactivate_user
 from app.api.dependencies.authentication import auth_guard, fastapi_users
 from app.core.config import settings
 from app.core.models import db_helper, User
 from app.core.schemas import UserRead, UserUpdate
-
 
 users_router = APIRouter(
     prefix=settings.api.prefix.users,
