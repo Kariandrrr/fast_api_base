@@ -16,7 +16,7 @@ async def lifespan(app: FastAPI):
 
 
 main_app = FastAPI(
-    title="Raspishno",
+    title="Track",
     description="Составление рассписаний",
     version="1.0",
     lifespan=lifespan,

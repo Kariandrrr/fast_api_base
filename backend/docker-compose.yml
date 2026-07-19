@@ -12,7 +12,7 @@ services:
     image: postgres
     container_name: postgresql
     environment:
-      POSTGRES_DB: raspishno
+      POSTGRES_DB: app
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       PGDATA: /var/lib/postgresql/data
